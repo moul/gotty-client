@@ -1,10 +1,13 @@
 package gottyclient
 
 import (
+	"bufio"
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
@@ -60,10 +63,40 @@ func (c *Client) Loop() error {
 		}
 	}
 
+	done := make(chan bool)
+	go c.readLoop(done)
+	go c.writeLoop(done)
+	<-done
+	return nil
+}
+
+func (c *Client) writeLoop(done chan bool) {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		x, size, err := reader.ReadRune()
+		if size <= 0 || err != nil {
+			done <- true
+			return
+		}
+
+		p := make([]byte, size)
+		utf8.EncodeRune(p, x)
+
+		err = c.Conn.WriteMessage(websocket.TextMessage, append([]byte("0"), p...))
+		if err != nil {
+			done <- true
+			return
+		}
+	}
+}
+
+func (c *Client) readLoop(done chan bool) {
 	for {
 		_, data, err := c.Conn.ReadMessage()
 		if err != nil {
-			return err
+			done <- true
+			logrus.Warnf("c.Conn.ReadMessage: %v", err)
+			return
 		}
 
 		switch data[0] {
@@ -78,7 +111,6 @@ func (c *Client) Loop() error {
 			logrus.Warnf("Unhandled protocol message: %s", string(data))
 		}
 	}
-	return nil
 }
 
 // NewClient returns a GoTTY client object
