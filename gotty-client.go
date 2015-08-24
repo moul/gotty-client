@@ -70,7 +70,8 @@ func (c *Client) Loop() error {
 		case '0': // data
 			fmt.Print(string(data[1:]))
 		case '1': // new title
-			logrus.Infof("New title: %s", string(data[1:]))
+			newTitle := string(data[1:])
+			fmt.Printf("\033]0;%s\007", newTitle)
 		case '2': // json prefs
 			logrus.Warnf("Unhandled protocol message: json pref: %s", string(data))
 		default:
