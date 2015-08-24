@@ -1,0 +1,5 @@
+language: go
+
+script:
+- go build ./...
+- go run ./cmd/gotty-client/main.go --help || true
