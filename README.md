@@ -1,7 +1,13 @@
 # gotty-client
-:wrench: GoTTY client for your terminal
+:wrench: [GoTTY](https://github.com/yudai/gotty) client for your terminal
 
 [![GoDoc](https://godoc.org/github.com/moul/gotty-client?status.svg)](https://godoc.org/github.com/moul/gotty-client)
+
+## Install
+
+```bash
+go get github.com/moul/gotty-client/cmd/gotty-client
+```
 
 ## Usage
 
@@ -46,12 +52,6 @@ Mon Aug 24 18:54:36 CEST 2015
 Mon Aug 24 18:54:37 CEST 2015
 Mon Aug 24 18:54:38 CEST 2015
 ^C
-```
-
-## Install
-
-```bash
-go get github.com/moul/gotty-client/cmd/gotty-client
 ```
 
 ## License
