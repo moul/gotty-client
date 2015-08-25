@@ -2,12 +2,16 @@ package gottyclient
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"unicode/utf8"
+	"unsafe"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
@@ -67,8 +71,41 @@ func (c *Client) Loop() error {
 	done := make(chan bool)
 	go c.readLoop(done)
 	go c.writeLoop(done)
+	go c.termsizeLoop(done)
 	<-done
 	return nil
+}
+
+type winsize struct {
+	Rows    uint16 `json:"rows"`
+	Columns uint16 `json:"columns"`
+	// unused
+	x uint16
+	y uint16
+}
+
+func (c *Client) termsizeLoop(done chan bool) {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGWINCH)
+	ws := winsize{}
+
+	for {
+		syscall.Syscall(syscall.SYS_IOCTL,
+			uintptr(0), uintptr(syscall.TIOCGWINSZ),
+			uintptr(unsafe.Pointer(&ws)))
+
+		b, err := json.Marshal(ws)
+		if err != nil {
+			logrus.Warnf("json.Marshal error: %v", err)
+		}
+
+		err = c.Conn.WriteMessage(websocket.TextMessage, append([]byte("1"), b...))
+		if err != nil {
+			logrus.Warnf("ws.WriteMessage failed: %v", err)
+		}
+
+		<-ch
+	}
 }
 
 func (c *Client) writeLoop(done chan bool) {
