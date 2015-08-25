@@ -11,6 +11,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/websocket"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 // GetWebsocketURL transforms a GoTTY http URL to its WebSocket URL
@@ -71,6 +72,11 @@ func (c *Client) Loop() error {
 }
 
 func (c *Client) writeLoop(done chan bool) {
+	oldState, err := terminal.MakeRaw(0)
+	if err == nil {
+		defer terminal.Restore(0, oldState)
+	}
+
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		x, size, err := reader.ReadRune()
