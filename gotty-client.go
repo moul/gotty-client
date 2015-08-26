@@ -2,6 +2,7 @@ package gottyclient
 
 import (
 	"bufio"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -19,10 +20,11 @@ import (
 )
 
 // GetWebsocketURL transforms a GoTTY http URL to its WebSocket URL
-func GetWebsocketURL(httpURL string) (*url.URL, error) {
+func GetWebsocketURL(httpURL string) (*url.URL, *http.Header, error) {
+	header := http.Header{}
 	target, err := url.Parse(httpURL)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if target.Scheme == "https" {
@@ -33,20 +35,25 @@ func GetWebsocketURL(httpURL string) (*url.URL, error) {
 
 	target.Path = strings.TrimLeft(target.Path+"ws", "/")
 
-	return target, nil
+	if target.User != nil {
+		header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(target.User.String())))
+		target.User = nil
+	}
+
+	return target, &header, nil
 }
 
 type Client struct {
 	Dialer    *websocket.Dialer
 	Conn      *websocket.Conn
-	Headers   http.Header
+	Headers   *http.Header
 	Target    string
 	Connected bool
 }
 
 // Connect tries to dial a websocket server
 func (c *Client) Connect() error {
-	conn, _, err := c.Dialer.Dial(c.Target, c.Headers)
+	conn, _, err := c.Dialer.Dial(c.Target, *c.Headers)
 	if err != nil {
 		return err
 	}
@@ -149,7 +156,7 @@ func (c *Client) readLoop(done chan bool) {
 			newTitle := string(data[1:])
 			fmt.Printf("\033]0;%s\007", newTitle)
 		case '2': // json prefs
-			logrus.Warnf("Unhandled protocol message: json pref: %s", string(data))
+			logrus.Debugf("Unhandled protocol message: json pref: %s", string(data))
 		default:
 			logrus.Warnf("Unhandled protocol message: %s", string(data))
 		}
@@ -158,13 +165,14 @@ func (c *Client) readLoop(done chan bool) {
 
 // NewClient returns a GoTTY client object
 func NewClient(httpURL string) (*Client, error) {
-	target, err := GetWebsocketURL(httpURL)
+	target, header, err := GetWebsocketURL(httpURL)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Client{
-		Dialer: &websocket.Dialer{},
-		Target: target.String(),
+		Dialer:  &websocket.Dialer{},
+		Target:  target.String(),
+		Headers: header,
 	}, nil
 }
