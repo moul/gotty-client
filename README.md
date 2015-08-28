@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/moul/gotty-client.svg?branch=master)](https://travis-ci.org/moul/gotty-client)
 [![GoDoc](https://godoc.org/github.com/moul/gotty-client?status.svg)](https://godoc.org/github.com/moul/gotty-client)
 
-```
+```ruby
                 +----------------+       +----------------+      +-------------+
                 |                |       |             +--------->  /bin/bash  |
             +--->    Browser    -----+   |     gotty   |  |      +-------------+
@@ -17,7 +17,8 @@
                 |................|       |             +--------->  /bin/bash  |
                 +================+       +----------------+      +-------------+
 
-
+                  ^  ^  ^  ^  ^
+                  |  |  |  |  |
 ```
 
 
