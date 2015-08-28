@@ -4,6 +4,23 @@
 [![Build Status](https://travis-ci.org/moul/gotty-client.svg?branch=master)](https://travis-ci.org/moul/gotty-client)
 [![GoDoc](https://godoc.org/github.com/moul/gotty-client?status.svg)](https://godoc.org/github.com/moul/gotty-client)
 
+```
+                +----------------+       +----------------+      +-------------+
+                |                |       |             +--------->  /bin/bash  |
+            +--->    Browser    -----+   |     gotty   |  |      +-------------+
++-------+   |   |                |   |   |             |  |                     
+|       |   |   +----------------+   |   |             |  |      +-------------+
+|  Bob  +---+                        +--->---websockets+--------->  /bin/bash  |
+|       |   |   +================+   |   |             |  |      +-------------+
++-------+   |   |................|   |   |             |  |                     
+            +--->..gotty-client.-----+   |             |  |      +-------------+
+                |................|       |             +--------->  /bin/bash  |
+                +================+       +----------------+      +-------------+
+
+
+```
+
+
 ## Install
 
 ```bash
