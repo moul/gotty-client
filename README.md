@@ -8,11 +8,11 @@
                 +----------------+       +----------------+      +-------------+
                 |                |       |             +--------->  /bin/bash  |
             +--->    Browser    -----+   |     gotty   |  |      +-------------+
-+-------+   |   |                |   |   |             |  |                     
++-------+   |   |                |   |   |             |  |
 |       |   |   +----------------+   |   |             |  |      +-------------+
 |  Bob  +---+                        +--->---websockets+--------->  /bin/bash  |
 |       |   |   +================+   |   |             |  |      +-------------+
-+-------+   |   |................|   |   |             |  |                     
++-------+   |   |................|   |   |             |  |
             +--->..gotty-client.-----+   |             |  |      +-------------+
                 |................|       |             +--------->  /bin/bash  |
                 +================+       +----------------+      +-------------+
@@ -72,6 +72,35 @@ Mon Aug 24 18:54:37 CEST 2015
 Mon Aug 24 18:54:38 CEST 2015
 ^C
 ```
+
+## Changelog
+
+### master (unreleased)
+
+* Add 'homebrew support' ([#1](https://github.com/moul/gotty-client/issues/1))
+* Add Changelog ([#5](https://github.com/moul/gotty-client/issues/5))
+
+[full commits list](https://github.com/moul/gotty-client/compare/v1.0.1...master)
+
+### [v1.0.1](https://github.com/moul/gotty-client/releases/tag/v1.0.1) (2015-09-27)
+
+* Using party to manage dependencies
+
+[full commits list](https://github.com/moul/gotty-client/compare/v1.0.0...v1.0.1)
+
+### [v1.0.0](https://github.com/moul/gotty-client/releases/tag/v1.0.0) (2015-09-27)
+
+Compatible with [GoTTY](https://github.com/yudai/gotty) version: [v0.0.10](https://github.com/yudai/gotty/releases/tag/v0.0.10)
+
+#### Features
+
+* Support **basic-auth**
+* Support **terminal-(re)size**
+* Support **write**
+* Support **title**
+* Support **custom URI**
+
+[full commits list](https://github.com/moul/gotty-client/compare/cf0c1146c7ce20fe0bd65764c13253bc575cd43a...v1.0.0)
 
 ## License
 
