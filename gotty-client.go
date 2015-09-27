@@ -17,9 +17,9 @@ import (
 	"unicode/utf8"
 	"unsafe"
 
-	"github.com/Sirupsen/logrus"
-	"github.com/gorilla/websocket"
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/moul/gotty-client/vendor/github.com/Sirupsen/logrus"
+	"github.com/moul/gotty-client/vendor/github.com/gorilla/websocket"
+	"github.com/moul/gotty-client/vendor/golang.org/x/crypto/ssh/terminal"
 )
 
 // GetAuthTokenURL transforms a GoTTY http URL to its AuthToken file URL

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/moul/gotty-client"
+	"github.com/moul/gotty-client/vendor/github.com/Sirupsen/logrus"
 )
 
 func usage() {
