@@ -79,6 +79,7 @@ Mon Aug 24 18:54:38 CEST 2015
 
 * Add 'homebrew support' ([#1](https://github.com/moul/gotty-client/issues/1))
 * Add Changelog ([#5](https://github.com/moul/gotty-client/issues/5))
+* Add GOXC configuration to build binaries for multiple architectures ([#2](https://github.com/moul/gotty-client/issues/2))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.0.1...master)
 
