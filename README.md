@@ -1,6 +1,8 @@
 # gotty-client
 :wrench: [GoTTY](https://github.com/yudai/gotty) client for your terminal
 
+![](https://raw.githubusercontent.com/moul/gotty-client/master/resources/gotty-client.png)
+
 [![Build Status](https://travis-ci.org/moul/gotty-client.svg?branch=master)](https://travis-ci.org/moul/gotty-client)
 [![GoDoc](https://godoc.org/github.com/moul/gotty-client?status.svg)](https://godoc.org/github.com/moul/gotty-client)
 
