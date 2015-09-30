@@ -6,12 +6,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
 	"regexp"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 	"unicode/utf8"
@@ -40,6 +42,15 @@ func GetAuthTokenURL(httpURL string) (*url.URL, *http.Header, error) {
 	return target, &header, nil
 }
 
+// GetURLQuery returns url.query
+func GetURLQuery(rawurl string) (url.Values, error) {
+	target, err := url.Parse(rawurl)
+	if err != nil {
+		return nil, err
+	}
+	return target.Query(), nil
+}
+
 // GetWebsocketURL transforms a GoTTY http URL to its WebSocket URL
 func GetWebsocketURL(httpURL string) (*url.URL, *http.Header, error) {
 	header := http.Header{}
@@ -65,10 +76,17 @@ func GetWebsocketURL(httpURL string) (*url.URL, *http.Header, error) {
 }
 
 type Client struct {
-	Dialer    *websocket.Dialer
-	Conn      *websocket.Conn
-	URL       string
-	Connected bool
+	Dialer     *websocket.Dialer
+	Conn       *websocket.Conn
+	URL        string
+	Connected  bool
+	WriteMutex *sync.Mutex
+}
+
+func (c *Client) write(data []byte) error {
+	c.WriteMutex.Lock()
+	defer c.WriteMutex.Unlock()
+	return c.Conn.WriteMessage(websocket.TextMessage, data)
 }
 
 // GetAuthToken retrieves an Auth Token from dynamic auth_token.js file
@@ -115,8 +133,24 @@ func (c *Client) Connect() error {
 	}
 	c.Conn = conn
 
-	// Send AuthToken
-	err = c.Conn.WriteMessage(websocket.TextMessage, []byte(authToken))
+	query, err := GetURLQuery(c.URL)
+	if err != nil {
+		return err
+	}
+	querySingle := make(map[string]string)
+
+	for key, value := range query {
+		querySingle[key] = value[0]
+	}
+
+	querySingle["AuthToken"] = authToken
+	json, err := json.Marshal(querySingle)
+	if err != nil {
+		log.Printf("Failed to parse init message %v", err)
+		return err
+	}
+	// Send Json
+	err = c.write(json)
 	if err != nil {
 		return err
 	}
@@ -128,7 +162,7 @@ func (c *Client) Connect() error {
 
 func (c *Client) pingLoop() {
 	for {
-		c.Conn.WriteMessage(websocket.TextMessage, []byte("1"))
+		c.write([]byte("1"))
 		time.Sleep(30 * time.Second)
 	}
 }
@@ -178,7 +212,7 @@ func (c *Client) termsizeLoop(done chan bool) {
 			logrus.Warnf("json.Marshal error: %v", err)
 		}
 
-		err = c.Conn.WriteMessage(websocket.TextMessage, append([]byte("2"), b...))
+		err = c.write(append([]byte("2"), b...))
 		if err != nil {
 			logrus.Warnf("ws.WriteMessage failed: %v", err)
 		}
@@ -204,7 +238,7 @@ func (c *Client) writeLoop(done chan bool) {
 		p := make([]byte, size)
 		utf8.EncodeRune(p, x)
 
-		err = c.Conn.WriteMessage(websocket.TextMessage, append([]byte("0"), p...))
+		err = c.write(append([]byte("0"), p...))
 		if err != nil {
 			done <- true
 			return
@@ -220,7 +254,11 @@ func (c *Client) readLoop(done chan bool) {
 			logrus.Warnf("c.Conn.ReadMessage: %v", err)
 			return
 		}
-
+		if len(data) == 0 {
+			done <- true
+			logrus.Warnf("An error has occured")
+			return
+		}
 		switch data[0] {
 		case '0': // data
 			buf, err := base64.StdEncoding.DecodeString(string(data[1:]))
@@ -245,7 +283,8 @@ func (c *Client) readLoop(done chan bool) {
 // NewClient returns a GoTTY client object
 func NewClient(httpURL string) (*Client, error) {
 	return &Client{
-		Dialer: &websocket.Dialer{},
-		URL:    httpURL,
+		Dialer:     &websocket.Dialer{},
+		URL:        httpURL,
+		WriteMutex: &sync.Mutex{},
 	}, nil
 }
