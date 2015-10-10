@@ -4,9 +4,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/codegangsta/cli"
 	"github.com/moul/gotty-client"
 	"github.com/moul/gotty-client/vendor/github.com/Sirupsen/logrus"
+	"github.com/moul/gotty-client/vendor/github.com/codegangsta/cli"
 )
 
 var VERSION string
@@ -18,6 +18,7 @@ func main() {
 	app.Email = "https://github.com/moul/gotty-client"
 	app.Version = VERSION
 	app.Usage = "GoTTY client for your terminal"
+	app.ArgsUsage = "GOTTY_URL"
 
 	app.Action = Action
 
