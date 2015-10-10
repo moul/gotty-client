@@ -2,11 +2,16 @@ COMMANDS :=	$(addprefix ./,$(wildcard cmd/*))
 PACKAGES :=	 .
 VERSION :=	$(shell cat .goxc.json | jq -c .PackageVersion | sed 's/"//g')
 SOURCES :=	$(shell find . -name "*.go")
-GOTTY_URL :=	http://localhost:8080
+GOTTY_URL :=	http://localhost:8081/
 
 
 .PHONY: build
 build: $(notdir $(COMMANDS))
+
+
+.PHONY: test
+test: build
+	./gotty-client $(GOTTY_URL)
 
 
 .PHONY: build-docker
@@ -41,7 +46,7 @@ $(notdir $(COMMANDS)): $(SOURCES)
 	gofmt -w $(PACKAGES) ./cmd/$@
 	go test -i $(PACKAGES) ./cmd/$@
 	go build -o $@ ./cmd/$@
-	@# ./$@ --version
+	./$@ --version
 
 
 dist/latest/gotty-client_latest_linux_386: $(SOURCES)
