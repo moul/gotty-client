@@ -77,7 +77,7 @@ Mon Aug 24 18:54:38 CEST 2015
 
 ## Changelog
 
-### master (unreleased)
+### v1.1.0 (2015-10-10)
 
 * Handling arguments + using mutexes (thanks to [@QuentinPerez](https://github.com/QuentinPerez))
 * Add logo ([#9](https://github.com/moul/gotty-client/issues/9))
@@ -87,7 +87,7 @@ Mon Aug 24 18:54:38 CEST 2015
 * Add Changelog ([#5](https://github.com/moul/gotty-client/issues/5))
 * Add GOXC configuration to build binaries for multiple architectures ([#2](https://github.com/moul/gotty-client/issues/2))
 
-[full commits list](https://github.com/moul/gotty-client/compare/v1.0.1...master)
+[full commits list](https://github.com/moul/gotty-client/compare/v1.0.1...v1.1.0)
 
 ### [v1.0.1](https://github.com/moul/gotty-client/releases/tag/v1.0.1) (2015-09-27)
 
