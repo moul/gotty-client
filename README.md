@@ -79,6 +79,8 @@ Mon Aug 24 18:54:38 CEST 2015
 
 ### master (unreleased)
 
+* Handling arguments + using mutexes (thanks to [@QuentinPerez](https://github.com/QuentinPerez))
+* Add logo ([#9](https://github.com/moul/gotty-client/issues/9))
 * Using codegansta/cli for CLI parsing ([#3](https://github.com/moul/gotty-client/issues/3))
 * Fix panic when running on older GoTTY server ([#13](https://github.com/moul/gotty-client/issues/13))
 * Add 'homebrew support' ([#1](https://github.com/moul/gotty-client/issues/1))
