@@ -77,6 +77,12 @@ Mon Aug 24 18:54:38 CEST 2015
 
 ## Changelog
 
+### master (unreleased)
+
+* No entry
+
+[full commits list](https://github.com/moul/gotty-client/compare/v1.1.0...master)
+
 ### v1.1.0 (2015-10-10)
 
 * Handling arguments + using mutexes (thanks to [@QuentinPerez](https://github.com/QuentinPerez))
