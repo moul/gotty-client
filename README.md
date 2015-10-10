@@ -23,7 +23,7 @@
                   |  |  |  |  |
 ```
 
-## Usage
+## Example
 
 Server side ([GoTTY](https://github.com/yudai/gotty))
 
@@ -51,6 +51,30 @@ Mon Aug 24 18:54:36 CEST 2015
 Mon Aug 24 18:54:37 CEST 2015
 Mon Aug 24 18:54:38 CEST 2015
 ^C
+```
+
+## Usage
+
+```console
+$ gotty-client -h
+NAME:
+   gotty-client - GoTTY client for your terminal
+
+USAGE:
+   gotty-client [global options] command [command options] GOTTY_URL
+
+VERSION:
+   1.1.0
+
+AUTHOR(S):
+   Manfred Touron <https://github.com/moul/gotty-client>
+
+COMMANDS:
+   help, h	Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h		show help
+   --version, -v	print the version
 ```
 
 ## Install
