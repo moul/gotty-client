@@ -79,6 +79,7 @@ Mon Aug 24 18:54:38 CEST 2015
 
 ### master (unreleased)
 
+* Fix panic when running on older GoTTY server ([#13](https://github.com/moul/gotty-client/issues/13))
 * Add 'homebrew support' ([#1](https://github.com/moul/gotty-client/issues/1))
 * Add Changelog ([#5](https://github.com/moul/gotty-client/issues/5))
 * Add GOXC configuration to build binaries for multiple architectures ([#2](https://github.com/moul/gotty-client/issues/2))

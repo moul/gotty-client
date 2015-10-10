@@ -111,7 +111,12 @@ func (c *Client) GetAuthToken() (string, error) {
 	}
 
 	re := regexp.MustCompile("var gotty_auth_token = '(.*)'")
-	return re.FindStringSubmatch(string(body))[1], nil
+	output := re.FindStringSubmatch(string(body))
+	if len(output) == 0 {
+		return "", fmt.Errorf("Cannot fetch GoTTY auth-token, please upgrade your GoTTY server.")
+	}
+
+	return output[1], nil
 }
 
 // Connect tries to dial a websocket server
