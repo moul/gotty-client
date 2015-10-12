@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -83,6 +82,11 @@ type Client struct {
 	WriteMutex *sync.Mutex
 }
 
+type querySingleType struct {
+	AuthToken string `json:"AuthToken"`
+	Arguments string `json:"Arguments"`
+}
+
 func (c *Client) write(data []byte) error {
 	c.WriteMutex.Lock()
 	defer c.WriteMutex.Unlock()
@@ -142,16 +146,15 @@ func (c *Client) Connect() error {
 	if err != nil {
 		return err
 	}
-	querySingle := make(map[string]string)
 
-	for key, value := range query {
-		querySingle[key] = value[0]
+	var querySingle querySingleType = querySingleType{
+		Arguments: "?" + query.Encode(),
+		AuthToken: authToken,
 	}
 
-	querySingle["AuthToken"] = authToken
 	json, err := json.Marshal(querySingle)
 	if err != nil {
-		log.Printf("Failed to parse init message %v", err)
+		logrus.Errorf("Failed to parse init message %v", err)
 		return err
 	}
 	// Send Json

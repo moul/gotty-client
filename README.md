@@ -103,11 +103,11 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
-* No entry
+* Fix arguments passing ([#16](https://github.com/moul/gotty-client/issues/16))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.1.0...master)
 
-### v1.1.0 (2015-10-10)
+### [v1.1.0](https://github.com/moul/gotty-client/releases/tag/v1.1.0) (2015-10-10)
 
 * Handling arguments + using mutexes (thanks to [@QuentinPerez](https://github.com/QuentinPerez))
 * Add logo ([#9](https://github.com/moul/gotty-client/issues/9))
