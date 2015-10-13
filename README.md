@@ -103,6 +103,8 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
+* Add debug mode (`--debug`/`-D`) ([#18](https://github.com/moul/gotty-client/issues/18))
+* Improve error message when connecting by checking HTTP status code
 * Fix arguments passing ([#16](https://github.com/moul/gotty-client/issues/16))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.1.0...master)
