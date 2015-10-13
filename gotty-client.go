@@ -108,6 +108,13 @@ func (c *Client) GetAuthToken() (string, error) {
 		return "", err
 	}
 
+	switch resp.StatusCode {
+	case 200:
+		// Everything is OK
+	default:
+		return "", fmt.Errorf("unknown status code: %d (%s)", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
+
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
