@@ -20,6 +20,14 @@ func main() {
 	app.Usage = "GoTTY client for your terminal"
 	app.ArgsUsage = "GOTTY_URL"
 
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:   "debug, D",
+			Usage:  "Enable debug mode",
+			EnvVar: "GOTTY_CLIENT_DEBUG",
+		},
+	}
+
 	app.Action = Action
 
 	app.Run(os.Args)
@@ -30,9 +38,16 @@ func Action(c *cli.Context) {
 		logrus.Fatalf("usage: gotty-client [GoTTY URL]")
 	}
 
-	url := c.Args()[0]
+	// setting up logrus
+	logrus.SetOutput(os.Stderr)
+	if c.Bool("debug") {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
 
 	// create Client
+	url := c.Args()[0]
 	client, err := gottyclient.NewClient(url)
 	if err != nil {
 		logrus.Fatalf("Cannot create client: %v", err)

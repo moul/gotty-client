@@ -100,6 +100,7 @@ func (c *Client) GetAuthToken() (string, error) {
 		return "", err
 	}
 
+	logrus.Debugf("Fetching auth token auth-token: %q", target.String())
 	req, err := http.NewRequest("GET", target.String(), nil)
 	req.Header = *header
 	client := http.Client{}
@@ -137,34 +138,36 @@ func (c *Client) Connect() error {
 	if err != nil {
 		return err
 	}
+	logrus.Debugf("Auth-token: %q", authToken)
 
 	// Open WebSocket connection
 	target, header, err := GetWebsocketURL(c.URL)
 	if err != nil {
 		return err
 	}
+	logrus.Debugf("Connecting to websocket: %q", target.String())
 	conn, _, err := c.Dialer.Dial(target.String(), *header)
 	if err != nil {
 		return err
 	}
 	c.Conn = conn
 
+	// Pass arguments and auth-token
 	query, err := GetURLQuery(c.URL)
 	if err != nil {
 		return err
 	}
-
 	var querySingle querySingleType = querySingleType{
 		Arguments: "?" + query.Encode(),
 		AuthToken: authToken,
 	}
-
 	json, err := json.Marshal(querySingle)
 	if err != nil {
 		logrus.Errorf("Failed to parse init message %v", err)
 		return err
 	}
 	// Send Json
+	logrus.Debugf("Sending arguments and auth-token")
 	err = c.write(json)
 	if err != nil {
 		return err
@@ -177,6 +180,7 @@ func (c *Client) Connect() error {
 
 func (c *Client) pingLoop() {
 	for {
+		logrus.Debugf("Sending ping")
 		c.write([]byte("1"))
 		time.Sleep(30 * time.Second)
 	}
@@ -286,7 +290,7 @@ func (c *Client) readLoop(done chan bool) {
 			newTitle := string(data[1:])
 			fmt.Printf("\033]0;%s\007", newTitle)
 		case '3': // json prefs
-			logrus.Debugf("Unhandled protocol message: json pref: %s", string(data))
+			logrus.Debugf("Unhandled protocol message: json pref: %s", string(data[1:]))
 		case '4': // autoreconnect
 			logrus.Debugf("Unhandled protocol message: autoreconnect: %s", string(data))
 		default:
