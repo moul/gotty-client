@@ -157,7 +157,7 @@ func (c *Client) Connect() error {
 	if err != nil {
 		return err
 	}
-	var querySingle querySingleType = querySingleType{
+	querySingle := querySingleType{
 		Arguments: "?" + query.Encode(),
 		AuthToken: authToken,
 	}
