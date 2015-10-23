@@ -319,7 +319,9 @@ func (c *Client) readLoop(done chan bool, quit chan struct{}, wg *sync.WaitGroup
 		case msg := <-msgChan:
 			if msg.Err != nil {
 				done <- true
-				logrus.Warnf("c.Conn.ReadMessage: %v", msg.Err)
+				if _, ok := msg.Err.(*websocket.CloseError); !ok {
+					logrus.Warnf("c.Conn.ReadMessage: %v", msg.Err)
+				}
 				return
 			}
 			if len(msg.Data) == 0 {
