@@ -80,6 +80,7 @@ type Client struct {
 	URL        string
 	Connected  bool
 	WriteMutex *sync.Mutex
+	Output     io.Writer
 }
 
 type querySingleType struct {
@@ -335,11 +336,11 @@ func (c *Client) readLoop(done chan bool, quit chan struct{}, wg *sync.WaitGroup
 				if err != nil {
 					logrus.Warnf("Invalid base64 content: %q", msg.Data[1:])
 				}
-				fmt.Print(string(buf))
+				fmt.Fprintf(c.Output, string(buf))
 			case '1': // pong
 			case '2': // new title
 				newTitle := string(msg.Data[1:])
-				fmt.Printf("\033]0;%s\007", newTitle)
+				fmt.Fprintf(c.Output, "\033]0;%s\007", newTitle)
 			case '3': // json prefs
 				logrus.Debugf("Unhandled protocol message: json pref: %s", string(msg.Data[1:]))
 			case '4': // autoreconnect
@@ -351,11 +352,17 @@ func (c *Client) readLoop(done chan bool, quit chan struct{}, wg *sync.WaitGroup
 	}
 }
 
+// SetOutput changes the output stream
+func (c *Client) SetOutput(w io.Writer) {
+	c.Output = w
+}
+
 // NewClient returns a GoTTY client object
 func NewClient(httpURL string) (*Client, error) {
 	return &Client{
 		Dialer:     &websocket.Dialer{},
 		URL:        httpURL,
 		WriteMutex: &sync.Mutex{},
+		Output:     os.Stdout,
 	}, nil
 }
