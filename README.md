@@ -103,7 +103,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
-* No entry
+* Add `ExitLoop` which allow to exit from `Loop` function
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.2.0...master)
 
