@@ -103,6 +103,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
+* Fix `connected` state when using `Connect()` + `Loop()` methods
 * Add `ExitLoop` which allow to exit from `Loop` function
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.2.0...master)

@@ -153,6 +153,7 @@ func (c *Client) Connect() error {
 		return err
 	}
 	c.Conn = conn
+	c.Connected = true
 
 	// Pass arguments and auth-token
 	query, err := GetURLQuery(c.URL)
