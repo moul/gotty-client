@@ -75,13 +75,14 @@ func GetWebsocketURL(httpURL string) (*url.URL, *http.Header, error) {
 }
 
 type Client struct {
-	Dialer     *websocket.Dialer
-	Conn       *websocket.Conn
-	URL        string
-	Connected  bool
-	WriteMutex *sync.Mutex
-	Output     io.Writer
-	QuitChan   chan struct{}
+	Dialer         *websocket.Dialer
+	Conn           *websocket.Conn
+	URL            string
+	Connected      bool
+	WriteMutex     *sync.Mutex
+	Output         io.Writer
+	QuitChan       chan struct{}
+	QuitChanClosed bool
 }
 
 type querySingleType struct {
@@ -197,7 +198,10 @@ func (c *Client) Close() {
 // ExitLoop will kill all goroutine
 // ExitLoop() -> wait Loop() -> Close()
 func (c *Client) ExitLoop() {
-	close(c.QuitChan)
+	if !c.QuitChanClosed {
+		close(c.QuitChan)
+		c.QuitChanClosed = true
+	}
 }
 
 // Loop will look indefinitely for new messages
@@ -221,6 +225,7 @@ func (c *Client) Loop() error {
 	select {
 	case <-done:
 		close(c.QuitChan)
+		c.QuitChanClosed = true
 	case <-c.QuitChan:
 	}
 	wg.Wait()
