@@ -372,11 +372,30 @@ func (c *Client) SetOutput(w io.Writer) {
 	c.Output = w
 }
 
+// ParseURL parses an URL which may be incomplete and tries to standardize it
+func ParseURL(input string) (string, error) {
+	parsed, err := url.Parse(input)
+	if err != nil {
+		return "", err
+	}
+	switch parsed.Scheme {
+	case "http", "https":
+		// everything is ok
+	default:
+		return ParseURL(fmt.Sprintf("http://%s", input))
+	}
+	return parsed.String(), nil
+}
+
 // NewClient returns a GoTTY client object
-func NewClient(httpURL string) (*Client, error) {
+func NewClient(inputURL string) (*Client, error) {
+	url, err := ParseURL(inputURL)
+	if err != nil {
+		return nil, err
+	}
 	return &Client{
 		Dialer:     &websocket.Dialer{},
-		URL:        httpURL,
+		URL:        url,
 		WriteMutex: &sync.Mutex{},
 		Output:     os.Stdout,
 		QuitChan:   make(chan struct{}),
