@@ -104,6 +104,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 ### master (unreleased)
 
 * Flexible parsing of the input URL
+* Add tests
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.3.0...master)
 
