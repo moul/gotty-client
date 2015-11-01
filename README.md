@@ -1,5 +1,5 @@
 # gotty-client
-:wrench: [GoTTY](https://github.com/yudai/gotty) client for your terminal
+:wrench: Terminal client for [GoTTY](https://github.com/yudai/gotty).
 
 ![](https://raw.githubusercontent.com/moul/gotty-client/master/resources/gotty-client.png)
 
