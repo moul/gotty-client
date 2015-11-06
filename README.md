@@ -103,6 +103,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
+* Add an error if the go version is lower than 1.5
 * Flexible parsing of the input URL
 * Add tests
 
