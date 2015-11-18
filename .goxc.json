@@ -1,6 +1,7 @@
 {
 	"AppName": "gotty-client",
 	"ArtifactsDest": "dist",
+	"BuildConstraints": "!plan9,!nacl,!solaris",
 	"OutPath": "{{.Dest}}{{.PS}}{{.Version}}{{.PS}}{{.ExeName}}_{{.Version}}_{{.Os}}_{{.Arch}}{{.Ext}}",
 	"TasksExclude": [
 		"go-test",

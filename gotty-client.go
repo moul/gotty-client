@@ -9,13 +9,10 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/signal"
 	"regexp"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
-	"unsafe"
 
 	"github.com/moul/gotty-client/vendor/github.com/Sirupsen/logrus"
 	"github.com/moul/gotty-client/vendor/github.com/creack/goselect"
@@ -243,23 +240,16 @@ type winsize struct {
 func (c *Client) termsizeLoop(wg *sync.WaitGroup) {
 	defer wg.Done()
 	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGWINCH)
-	defer signal.Reset(syscall.SIGWINCH)
-	ws := winsize{}
+	notifySignalSIGWINCH(ch)
+	defer resetSignalSIGWINCH()
 
 	for {
-		syscall.Syscall(syscall.SYS_IOCTL,
-			uintptr(0), uintptr(syscall.TIOCGWINSZ),
-			uintptr(unsafe.Pointer(&ws)))
-
-		b, err := json.Marshal(ws)
-		if err != nil {
-			logrus.Warnf("json.Marshal error: %v", err)
-		}
-
-		err = c.write(append([]byte("2"), b...))
-		if err != nil {
-			logrus.Warnf("ws.WriteMessage failed: %v", err)
+		if b, err := syscallTIOCGWINSZ(); err != nil {
+			logrus.Warn(err)
+		} else {
+			if err = c.write(append([]byte("2"), b...)); err != nil {
+				logrus.Warnf("ws.WriteMessage failed: %v", err)
+			}
 		}
 		select {
 		case <-c.QuitChan:
