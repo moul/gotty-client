@@ -64,7 +64,7 @@ USAGE:
    gotty-client [global options] command [command options] GOTTY_URL
 
 VERSION:
-   1.1.0
+   1.3.0+
 
 AUTHOR(S):
    Manfred Touron <https://github.com/moul/gotty-client>
@@ -73,6 +73,7 @@ COMMANDS:
    help, h	Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
+   --debug, -D		Enable debug mode [$GOTTY_CLIENT_DEBUG]
    --help, -h		show help
    --version, -v	print the version
 ```
@@ -103,6 +104,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ### master (unreleased)
 
+* Remove solaris,plan9,nacl for `.goxc.json`
 * Add an error if the go version is lower than 1.5
 * Flexible parsing of the input URL
 * Add tests
