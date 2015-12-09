@@ -102,7 +102,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ## Changelog
 
-### master (unreleased)
+### [v1.4.0](https://github.com/moul/gotty-client/releases/tag/v1.4.0) (2015-12-09)
 
 * Remove solaris,plan9,nacl for `.goxc.json`
 * Add an error if the go version is lower than 1.5
@@ -110,7 +110,7 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 * Add tests
 * Support of `--skip-tls-verify`
 
-[full commits list](https://github.com/moul/gotty-client/compare/v1.3.0...master)
+[full commits list](https://github.com/moul/gotty-client/compare/v1.3.0...v1.4.0)
 
 ### [v1.3.0](https://github.com/moul/gotty-client/releases/tag/v1.3.0) (2015-10-27)
 
