@@ -1,6 +1,7 @@
 package gottyclient
 
 import (
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -80,6 +81,7 @@ type Client struct {
 	Output         io.Writer
 	QuitChan       chan struct{}
 	QuitChanClosed bool
+	SkipTLSVerify  bool
 }
 
 type querySingleType struct {
@@ -104,6 +106,11 @@ func (c *Client) GetAuthToken() (string, error) {
 	req, err := http.NewRequest("GET", target.String(), nil)
 	req.Header = *header
 	client := http.Client{}
+	if c.SkipTLSVerify {
+		client.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
@@ -146,6 +153,9 @@ func (c *Client) Connect() error {
 		return err
 	}
 	logrus.Debugf("Connecting to websocket: %q", target.String())
+	if c.SkipTLSVerify {
+		c.Dialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 	conn, _, err := c.Dialer.Dial(target.String(), *header)
 	if err != nil {
 		return err
