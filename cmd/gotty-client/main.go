@@ -28,6 +28,11 @@ func main() {
 			Usage:  "Enable debug mode",
 			EnvVar: "GOTTY_CLIENT_DEBUG",
 		},
+		cli.BoolFlag{
+			Name:   "skip-tls-verify",
+			Usage:  "Skip TLS verify",
+			EnvVar: "SKIP_TLS_VERIFY",
+		},
 	}
 
 	app.Action = Action
@@ -53,6 +58,10 @@ func Action(c *cli.Context) {
 	client, err := gottyclient.NewClient(url)
 	if err != nil {
 		logrus.Fatalf("Cannot create client: %v", err)
+	}
+
+	if c.Bool("skip-tls-verify") {
+		client.SkipTLSVerify = true
 	}
 
 	// loop
