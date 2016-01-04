@@ -14,7 +14,7 @@
 // 	        panic(err)
 // 	}
 // 	defer terminal.Restore(0, oldState)
-package terminal // import "github.com/moul/gotty-client/vendor/golang.org/x/crypto/ssh/terminal"
+package terminal
 
 import (
 	"io"
