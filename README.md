@@ -102,13 +102,13 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ## Changelog
 
-### master (unreleased)
+### [v1.5.0](https://github.com/moul/gotty-client/releases/tag/v1.5.0) (2016-02-18)
 
 * Add autocomplete support ([#19](https://github.com/moul/gotty-client/issues/19))
 * Switch from `Party` to `Godep`
 * Fix terminal data being interpreted as format string ([#34](https://github.com/moul/gotty-client/pull/34)) ([@mickael9](https://github.com/mickael9))
 
-[full commits list](https://github.com/moul/gotty-client/compare/v1.4.0...master)
+[full commits list](https://github.com/moul/gotty-client/compare/v1.4.0...v1.5.0)
 
 ### [v1.4.0](https://github.com/moul/gotty-client/releases/tag/v1.4.0) (2015-12-09)
 
