@@ -102,6 +102,12 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ## Changelog
 
+### master (unreleased)
+
+* No entry
+
+[full commits list](https://github.com/moul/gotty-client/compare/v1.5.0...master)
+
 ### [v1.5.0](https://github.com/moul/gotty-client/releases/tag/v1.5.0) (2016-02-18)
 
 * Add autocomplete support ([#19](https://github.com/moul/gotty-client/issues/19))
