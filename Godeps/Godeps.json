@@ -22,7 +22,7 @@
 		},
 		{
 			"ImportPath": "github.com/gorilla/websocket",
-			"Rev": "b6ab76f1fe9803ee1d59e7e5b2a797c1fe897ce5"
+			"Rev": "5c91b59efa232fa9a87b705d54101832c498a172"
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",
