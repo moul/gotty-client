@@ -25,7 +25,7 @@ func main() {
 	app.ArgsUsage = "GOTTY_URL"
 	app.BashComplete = func(c *cli.Context) {
 		for _, command := range []string{
-			"--debug", "--skip-tls-verify", "--help",
+			"--debug", "--skip-tls-verify", "--use-proxy-from-env", "--help",
 			"--generate-bash-completion", "--version",
 			"http://user:pass@host:1234/path/\\\\?arg=abcdef\\\\&arg=ghijkl",
 			"https://user:pass@host:1234/path/\\\\?arg=abcdef\\\\&arg=ghijkl",
@@ -45,6 +45,11 @@ func main() {
 			Name:   "skip-tls-verify",
 			Usage:  "Skip TLS verify",
 			EnvVar: "SKIP_TLS_VERIFY",
+		},
+		cli.BoolFlag{
+			Name:   "use-proxy-from-env",
+			Usage:  "Use Proxy from environment",
+			EnvVar: "USE_PROXY_FROM_ENV",
 		},
 	}
 
@@ -75,6 +80,10 @@ func Action(c *cli.Context) {
 
 	if c.Bool("skip-tls-verify") {
 		client.SkipTLSVerify = true
+	}
+
+	if c.Bool("use-proxy-from-env") {
+		client.UseProxyFromEnv = true
 	}
 
 	// loop
