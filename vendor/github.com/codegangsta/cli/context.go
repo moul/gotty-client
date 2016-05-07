@@ -79,6 +79,15 @@ func (c *Context) GlobalInt(name string) int {
 	return 0
 }
 
+// Looks up the value of a global float64 flag, returns float64(0) if no float64
+// flag exists
+func (c *Context) GlobalFloat64(name string) float64 {
+	if fs := lookupGlobalFlagSet(name, c); fs != nil {
+		return lookupFloat64(name, fs)
+	}
+	return float64(0)
+}
+
 // Looks up the value of a global time.Duration flag, returns 0 if no time.Duration flag exists
 func (c *Context) GlobalDuration(name string) time.Duration {
 	if fs := lookupGlobalFlagSet(name, c); fs != nil {
@@ -130,6 +139,16 @@ func (c *Context) GlobalGeneric(name string) interface{} {
 // Returns the number of flags set
 func (c *Context) NumFlags() int {
 	return c.flagSet.NFlag()
+}
+
+// Set sets a context flag to a value.
+func (c *Context) Set(name, value string) error {
+	return c.flagSet.Set(name, value)
+}
+
+// GlobalSet sets a context flag to a value on the global flagset
+func (c *Context) GlobalSet(name, value string) error {
+	return globalContext(c).flagSet.Set(name, value)
 }
 
 // Determines if the flag was actually set
@@ -236,6 +255,19 @@ func (a Args) Swap(from, to int) error {
 	}
 	a[from], a[to] = a[to], a[from]
 	return nil
+}
+
+func globalContext(ctx *Context) *Context {
+	if ctx == nil {
+		return nil
+	}
+
+	for {
+		if ctx.parentContext == nil {
+			return ctx
+		}
+		ctx = ctx.parentContext
+	}
 }
 
 func lookupGlobalFlagSet(name string, ctx *Context) *flag.FlagSet {
