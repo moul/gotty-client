@@ -108,6 +108,9 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 ### master (unreleased)
 
 * Support of `--use-proxy-from-env` (Add Proxy support) ([#36](https://github.com/moul/gotty-client/pull/36)) ([@byung2](https://github.com/byung2))
+* Add debug mode ([#18](https://github.com/moul/gotty-client/issues/18))
+* Fix argument passing ([#16](https://github.com/moul/gotty-client/issues/16))
+* Remove warnings + golang fixes and refactoring ([@QuentinPerez](https://github.com/QuentinPerez))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.5.0...master)
 
