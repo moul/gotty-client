@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/moul/gotty-client",
 	"GoVersion": "go1.6",
-	"GodepVersion": "v62",
+	"GodepVersion": "v63",
 	"Packages": [
 		"github.com/moul/gotty-client",
 		"github.com/moul/gotty-client/cmd/gotty-client"
@@ -14,8 +14,8 @@
 		},
 		{
 			"ImportPath": "github.com/codegangsta/cli",
-			"Comment": "v1.16.0-20-gd3a4d54",
-			"Rev": "d3a4d5467b9d41ee3b466a3d6684cdc36482e471"
+			"Comment": "v1.17.0-27-g2ae9042",
+			"Rev": "2ae9042f5bcbaf15b01229f8395ba8e72e01bded"
 		},
 		{
 			"ImportPath": "github.com/creack/goselect",
@@ -23,8 +23,8 @@
 		},
 		{
 			"ImportPath": "github.com/gopherjs/gopherjs/js",
-			"Comment": "go1.5-53-gd5d8eb5",
-			"Rev": "d5d8eb5bbb7f4c0e10ccb62e1a45277cc823ff37"
+			"Comment": "go1.5-62-gdb27c7c",
+			"Rev": "db27c7c470d7404b6b201f82d6fd4821260bd13e"
 		},
 		{
 			"ImportPath": "github.com/gorilla/websocket",
@@ -52,26 +52,26 @@
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey",
-			"Comment": "1.6.1-25-gd4c757a",
+			"Comment": "1.6.2",
 			"Rev": "d4c757aa9afd1e2fc1832aaab209b5794eb336e1"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey/gotest",
-			"Comment": "1.6.1-25-gd4c757a",
+			"Comment": "1.6.2",
 			"Rev": "d4c757aa9afd1e2fc1832aaab209b5794eb336e1"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey/reporting",
-			"Comment": "1.6.1-25-gd4c757a",
+			"Comment": "1.6.2",
 			"Rev": "d4c757aa9afd1e2fc1832aaab209b5794eb336e1"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
-			"Rev": "47ff8dfbc528fea3003fc0ce2d88ffbbfbc46a43"
+			"Rev": "5bcd134fee4dd1475da17714aac19c0aa0142e2f"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "b776ec39b3e54652e09028aaaaac9757f4f8211a"
+			"Rev": "d4feaf1a7e61e1d9e79e6c4e76c6349e9cab0a03"
 		}
 	]
 }

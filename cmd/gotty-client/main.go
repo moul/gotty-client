@@ -53,12 +53,12 @@ func main() {
 		},
 	}
 
-	app.Action = Action
+	app.Action = action
 
 	app.Run(os.Args)
 }
 
-func Action(c *cli.Context) {
+func action(c *cli.Context) error {
 	if len(c.Args()) != 1 {
 		logrus.Fatalf("usage: gotty-client [GoTTY URL]")
 	}
@@ -90,4 +90,5 @@ func Action(c *cli.Context) {
 	if err = client.Loop(); err != nil {
 		logrus.Fatalf("Communication error: %v", err)
 	}
+	return nil
 }
