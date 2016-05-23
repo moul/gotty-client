@@ -105,6 +105,12 @@ $ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/
 
 ## Changelog
 
+### master (unreleased)
+
+* No entry
+
+[full commits list](https://github.com/moul/gotty-client/compare/v1.6.0...master)
+
 ### [v1.6.0](https://github.com/moul/gotty-client/releases/tag/v1.6.0) (2016-05-23)
 
 * Support of `--use-proxy-from-env` (Add Proxy support) ([#36](https://github.com/moul/gotty-client/pull/36)) ([@byung2](https://github.com/byung2))
