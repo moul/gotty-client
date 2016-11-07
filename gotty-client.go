@@ -293,6 +293,12 @@ func (c *Client) writeLoop(done chan bool, wg *sync.WaitGroup) {
 	rdfs := &goselect.FDSet{}
 	reader := io.Reader(os.Stdin)
 	for {
+		select {
+		case <-c.QuitChan:
+			return
+		default:
+		}
+
 		rdfs.Zero()
 		rdfs.Set(reader.(exposeFd).Fd())
 		err := goselect.Select(1, rdfs, nil, nil, 50*time.Millisecond)
@@ -302,22 +308,36 @@ func (c *Client) writeLoop(done chan bool, wg *sync.WaitGroup) {
 		}
 		if rdfs.IsSet(reader.(exposeFd).Fd()) {
 			size, err := reader.Read(buff)
-			if size <= 0 || err != nil {
-				done <- true
-				return
+
+			if err != nil {
+				if err == io.EOF {
+					// Send EOF to GoTTY
+
+					// Send 'Input' marker, as defined in GoTTY::client_context.go,
+					// followed by EOT (a translation of Ctrl-D for terminals)
+					err = c.write(append([]byte("0"), byte(4)))
+
+					if err != nil {
+						done <- true
+						return
+					}
+					continue
+				} else {
+					done <- true
+					return
+				}
 			}
+
+			if size <= 0 {
+				continue
+			}
+
 			data := buff[:size]
 			err = c.write(append([]byte("0"), data...))
 			if err != nil {
 				done <- true
 				return
 			}
-		}
-		select {
-		case <-c.QuitChan:
-			return
-		default:
-			break
 		}
 	}
 }
