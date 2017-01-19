@@ -8,6 +8,6 @@
 		"go-vet"
 	],
 	"MainDirsExclude": "vendor,Godeps,testdata",
-	"PackageVersion": "1.6.0+dev",
+        "PackageVersion": "1.6.1",
 	"ConfigVersion": "0.9"
 }
