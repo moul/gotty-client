@@ -100,7 +100,7 @@ $ brew install https://raw.githubusercontent.com/moul/gotty-client/master/contri
 or the latest released version
 
 ```console
-$ brew install https://raw.githubusercontent.com/moul/ssh2docker/master/contrib/homebrew/assh.rb
+$ brew install https://raw.githubusercontent.com/moul/gotty-client/master/contrib/homebrew/gotty-client.rb
 ```
 
 ## Changelog
