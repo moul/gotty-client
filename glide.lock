@@ -1,5 +1,5 @@
-hash: 5ba4ef945563e8e85097f2699126b1577f9c667fdbbcdd71604e553ab7dd2a03
-updated: 2017-02-04T23:03:32.03375088+01:00
+hash: a736e4b783986a296200a3f304c6e5b89c93dd21b887cb0522946e0c1d243cce
+updated: 2017-10-21T18:26:09.524709498-07:00
 imports:
 - name: github.com/codegangsta/cli
   version: 2ae9042f5bcbaf15b01229f8395ba8e72e01bded
@@ -13,8 +13,8 @@ imports:
   version: 1f512fc3f05332ba7117626cdfb4e07474e58e60
 - name: github.com/jtolds/gls
   version: 8ddce2a84170772b95dd5d576c48d517b22cac63
-- name: github.com/Sirupsen/logrus
-  version: cd7d1bbe41066b6c1f19780f895901052150a575
+- name: github.com/sirupsen/logrus
+  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/smartystreets/assertions
   version: 40711f7748186bbf9c99977cd89f21ce1a229447
   subpackages:
