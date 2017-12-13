@@ -21,6 +21,12 @@
 			"revisionTime": "2017-03-19T17:27:27Z"
 		},
 		{
+			"checksumSHA1": "F/DqkpP+/ZZWeWtsE9MTZUJOKmE=",
+			"path": "github.com/moby/moby/pkg/term",
+			"revision": "76531ccdeb5850156150b88c6a4a56bb8c35dc44",
+			"revisionTime": "2017-11-02T07:39:02Z"
+		},
+		{
 			"checksumSHA1": "9jFFVttlMr6qQ7e+IrcT20XmFQY=",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "61e43dc76f7ee59a82bdf3d71033dc12bea4c77d",

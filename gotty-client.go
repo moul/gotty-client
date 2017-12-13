@@ -17,6 +17,7 @@ import (
 
 	"github.com/creack/goselect"
 	"github.com/gorilla/websocket"
+	"github.com/moby/moby/pkg/term"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -82,6 +83,7 @@ type Client struct {
 	SkipTLSVerify   bool
 	UseProxyFromEnv bool
 	Connected       bool
+	EscapeKeys      []byte
 }
 
 type querySingleType struct {
@@ -317,7 +319,6 @@ type exposeFd interface {
 }
 
 func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
-
 	defer wg.Done()
 	fname := "writeLoop"
 
@@ -328,7 +329,11 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 	}
 
 	rdfs := &goselect.FDSet{}
-	reader := io.Reader(os.Stdin)
+	reader := io.ReadCloser(os.Stdin)
+
+	pr := term.NewEscapeProxy(reader, c.EscapeKeys)
+	defer reader.Close()
+
 	for {
 		select {
 		case <-c.poison:
@@ -344,7 +349,7 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 			return openPoison(fname, c.poison)
 		}
 		if rdfs.IsSet(reader.(exposeFd).Fd()) {
-			size, err := reader.Read(buff)
+			size, err := pr.Read(buff)
 
 			if err != nil {
 				if err == io.EOF {

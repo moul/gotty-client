@@ -108,7 +108,7 @@ $ brew install https://raw.githubusercontent.com/moul/gotty-client/master/contri
 
 ### master (unreleased)
 
-* No entry
+* Add `--detach-keys` option ([#52](https://github.com/moul/gotty-client/issues/52))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.6.1...master)
 
