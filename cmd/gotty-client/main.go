@@ -8,6 +8,7 @@ import (
 	"path"
 
 	"github.com/codegangsta/cli"
+	"github.com/moby/moby/pkg/term"
 	"github.com/moul/gotty-client"
 	"github.com/sirupsen/logrus"
 )
@@ -51,6 +52,11 @@ func main() {
 			Usage:  "Use Proxy from environment",
 			EnvVar: "USE_PROXY_FROM_ENV",
 		},
+		cli.StringFlag{
+			Name:  "detach-keys",
+			Usage: "Key sequence for detaching gotty-client",
+			Value: "ctrl-p,ctrl-q",
+		},
 	}
 
 	app.Action = action
@@ -84,6 +90,15 @@ func action(c *cli.Context) error {
 
 	if c.Bool("use-proxy-from-env") {
 		client.UseProxyFromEnv = true
+	}
+
+	if detachKey := c.String("detach-keys"); detachKey != "" {
+		escapeKeys, err := term.ToBytes(detachKey)
+		if err != nil {
+			logrus.Warnf("Invalid escape key: %v", err)
+		} else {
+			client.EscapeKeys = escapeKeys
+		}
 	}
 
 	// loop
