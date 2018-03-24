@@ -17,7 +17,6 @@ import (
 
 	"github.com/creack/goselect"
 	"github.com/gorilla/websocket"
-	"github.com/moby/moby/pkg/term"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -331,7 +330,7 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 	rdfs := &goselect.FDSet{}
 	reader := io.ReadCloser(os.Stdin)
 
-	pr := term.NewEscapeProxy(reader, c.EscapeKeys)
+	pr := NewEscapeProxy(reader, c.EscapeKeys)
 	defer reader.Close()
 
 	for {
