@@ -24,7 +24,8 @@ func syscallTIOCGWINSZ() ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("ioctl error: %v", err)
 	}
-	b, err := json.Marshal(ws)
+	tws := winsize{Rows: ws.Row, Columns: ws.Col}
+	b, err := json.Marshal(tws)
 	if err != nil {
 		return nil, fmt.Errorf("json.Marshal error: %v", err)
 	}
