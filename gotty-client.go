@@ -134,6 +134,7 @@ type Client struct {
 	EscapeKeys      []byte
 	V2              bool
 	message         *gottyMessageType
+	WSOrigin        string
 }
 
 type querySingleType struct {
@@ -206,6 +207,9 @@ func (c *Client) Connect() error {
 	target, header, err := GetWebsocketURL(c.URL)
 	if err != nil {
 		return err
+	}
+	if c.WSOrigin != "" {
+		header.Add("Origin", c.WSOrigin)
 	}
 	logrus.Debugf("Connecting to websocket: %q", target.String())
 	if c.SkipTLSVerify {
