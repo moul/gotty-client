@@ -21,6 +21,55 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// message types for gotty
+const (
+	OutputV1         = '0'
+	PongV1           = '1'
+	SetWindowTitleV1 = '2'
+	SetPreferencesV1 = '3'
+	SetReconnectV1   = '4'
+
+	InputV1          = '0'
+	PingV1           = '1'
+	ResizeTerminalV1 = '2'
+)
+
+// message types for gotty v2.0
+const (
+	// Unknown message type, maybe set by a bug
+	UnknownOutput = '0'
+	// Normal output to the terminal
+	Output = '1'
+	// Pong to the browser
+	Pong = '2'
+	// Set window title of the terminal
+	SetWindowTitle = '3'
+	// Set terminal preference
+	SetPreferences = '4'
+	// Make terminal to reconnect
+	SetReconnect = '5'
+
+	// Unknown message type, maybe sent by a bug
+	UnknownInput = '0'
+	// User input typically from a keyboard
+	Input = '1'
+	// Ping to the server
+	Ping = '2'
+	// Notify that the browser size has been changed
+	ResizeTerminal = '3'
+)
+
+type gottyMessageType struct {
+	output         byte
+	pong           byte
+	setWindowTitle byte
+	setPreferences byte
+	setReconnect   byte
+	input          byte
+	ping           byte
+	resizeTerminal byte
+}
+
 // GetAuthTokenURL transforms a GoTTY http URL to its AuthToken file URL
 func GetAuthTokenURL(httpURL string) (*url.URL, *http.Header, error) {
 	header := http.Header{}
@@ -83,6 +132,8 @@ type Client struct {
 	UseProxyFromEnv bool
 	Connected       bool
 	EscapeKeys      []byte
+	V2              bool
+	message         *gottyMessageType
 }
 
 type querySingleType struct {
@@ -196,10 +247,37 @@ func (c *Client) Connect() error {
 	return nil
 }
 
+// initMessageType initialize message types for gotty
+func (c *Client) initMessageType() {
+	if c.V2 {
+		c.message = &gottyMessageType{
+			output:         Output,
+			pong:           Pong,
+			setWindowTitle: SetWindowTitle,
+			setPreferences: SetPreferences,
+			setReconnect:   SetReconnect,
+			input:          Input,
+			ping:           Ping,
+			resizeTerminal: ResizeTerminal,
+		}
+	} else {
+		c.message = &gottyMessageType{
+			output:         OutputV1,
+			pong:           PongV1,
+			setWindowTitle: SetWindowTitleV1,
+			setPreferences: SetPreferencesV1,
+			setReconnect:   SetReconnectV1,
+			input:          InputV1,
+			ping:           PingV1,
+			resizeTerminal: ResizeTerminalV1,
+		}
+	}
+}
+
 func (c *Client) pingLoop() {
 	for {
 		logrus.Debugf("Sending ping")
-		c.write([]byte("1"))
+		c.write([]byte{c.message.ping})
 		time.Sleep(30 * time.Second)
 	}
 }
@@ -218,6 +296,9 @@ func (c *Client) ExitLoop() {
 
 // Loop will look indefinitely for new messages
 func (c *Client) Loop() error {
+	// Initialize message types for gotty
+	c.initMessageType()
+
 	if !c.Connected {
 		err := c.Connect()
 		if err != nil {
@@ -288,7 +369,6 @@ func die(fname string, poison chan bool) posionReason {
 }
 
 func (c *Client) termsizeLoop(wg *sync.WaitGroup) posionReason {
-
 	defer wg.Done()
 	fname := "termsizeLoop"
 
@@ -300,7 +380,7 @@ func (c *Client) termsizeLoop(wg *sync.WaitGroup) posionReason {
 		if b, err := syscallTIOCGWINSZ(); err != nil {
 			logrus.Warn(err)
 		} else {
-			if err = c.write(append([]byte("2"), b...)); err != nil {
+			if err = c.write(append([]byte{c.message.resizeTerminal}, b...)); err != nil {
 				logrus.Warnf("ws.WriteMessage failed: %v", err)
 			}
 		}
@@ -356,7 +436,7 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 
 					// Send 'Input' marker, as defined in GoTTY::client_context.go,
 					// followed by EOT (a translation of Ctrl-D for terminals)
-					err = c.write(append([]byte("0"), byte(4)))
+					err = c.write(append([]byte{c.message.input}, byte(4)))
 
 					if err != nil {
 						return openPoison(fname, c.poison)
@@ -372,16 +452,16 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 			}
 
 			data := buff[:size]
-			err = c.write(append([]byte("0"), data...))
+			err = c.write(append([]byte{c.message.input}, data...))
 			if err != nil {
 				return openPoison(fname, c.poison)
 			}
 		}
 	}
+
 }
 
 func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
-
 	defer wg.Done()
 	fname := "readLoop"
 
@@ -415,20 +495,20 @@ func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
 				return openPoison(fname, c.poison)
 			}
 			switch msg.Data[0] {
-			case '0': // data
+			case c.message.output: // data
 				buf, err := base64.StdEncoding.DecodeString(string(msg.Data[1:]))
 				if err != nil {
 					logrus.Warnf("Invalid base64 content: %q", msg.Data[1:])
 					break
 				}
 				c.Output.Write(buf)
-			case '1': // pong
-			case '2': // new title
+			case c.message.pong: // pong
+			case c.message.setWindowTitle: // new title
 				newTitle := string(msg.Data[1:])
 				fmt.Fprintf(c.Output, "\033]0;%s\007", newTitle)
-			case '3': // json prefs
+			case c.message.setPreferences: // json prefs
 				logrus.Debugf("Unhandled protocol message: json pref: %s", string(msg.Data[1:]))
-			case '4': // autoreconnect
+			case c.message.setReconnect: // autoreconnect
 				logrus.Debugf("Unhandled protocol message: autoreconnect: %s", string(msg.Data))
 			default:
 				logrus.Warnf("Unhandled protocol message: %s", string(msg.Data))
