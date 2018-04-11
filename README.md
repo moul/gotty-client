@@ -109,6 +109,10 @@ $ brew install https://raw.githubusercontent.com/moul/gotty-client/master/contri
 ### master (unreleased)
 
 * Add `--detach-keys` option ([#52](https://github.com/moul/gotty-client/issues/52))
+* Cross build on Solaris ([#55](https://github.com/moul/gotty-client/pull/55) ([@dimtion](https://github.com/dimtion))
+* Fix terminal resizing issue ([#56](https://github.com/moul/gotty-client/pull/56) ([@byung2](https://github.com/byung2))
+* Support for gotty v2.0 ([#58](https://github.com/moul/gotty-client/pull/58) ([@byung2](https://github.com/byung2))
+* Support ws-origin (CORS) ([#58](https://github.com/moul/gotty-client/pull/58) ([@byung2](https://github.com/byung2))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.6.1...master)
 
