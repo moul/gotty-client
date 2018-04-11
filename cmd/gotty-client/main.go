@@ -26,7 +26,8 @@ func main() {
 	app.ArgsUsage = "GOTTY_URL"
 	app.BashComplete = func(c *cli.Context) {
 		for _, command := range []string{
-			"--debug", "--skip-tls-verify", "--use-proxy-from-env", "--help",
+			"--debug", "--skip-tls-verify", "--use-proxy-from-env",
+			"--v2", "--detach-keys", "--ws-origin", "--help",
 			"--generate-bash-completion", "--version",
 			"http://user:pass@host:1234/path/\\\\?arg=abcdef\\\\&arg=ghijkl",
 			"https://user:pass@host:1234/path/\\\\?arg=abcdef\\\\&arg=ghijkl",
@@ -56,6 +57,16 @@ func main() {
 			Name:  "detach-keys",
 			Usage: "Key sequence for detaching gotty-client",
 			Value: "ctrl-p,ctrl-q",
+		},
+		cli.BoolFlag{
+			Name:   "v2",
+			Usage:  "For Gotty 2.0",
+			EnvVar: "GOTTY_CLIENT_GOTTY2",
+		},
+		cli.StringFlag{
+			Name:   "ws-origin, w",
+			Usage:  "WebSocket Origin URL",
+			EnvVar: "GOTTY_CLIENT_WS_ORIGIN",
 		},
 	}
 
@@ -90,6 +101,14 @@ func action(c *cli.Context) error {
 
 	if c.Bool("use-proxy-from-env") {
 		client.UseProxyFromEnv = true
+	}
+
+	if c.Bool("v2") {
+		client.V2 = true
+	}
+
+	if wsOrigin := c.String("ws-origin"); wsOrigin != "" {
+		client.WSOrigin = wsOrigin
 	}
 
 	if detachKey := c.String("detach-keys"); detachKey != "" {
