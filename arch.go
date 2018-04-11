@@ -20,11 +20,12 @@ func resetSignalSIGWINCH() {
 }
 
 func syscallTIOCGWINSZ() ([]byte, error) {
-	ws, err := unix.IoctlGetWinsize(0, 0)
+	ws, err := unix.IoctlGetWinsize(0, unix.TIOCGWINSZ)
 	if err != nil {
 		return nil, fmt.Errorf("ioctl error: %v", err)
 	}
-	b, err := json.Marshal(ws)
+	tws := winsize{Rows: ws.Row, Columns: ws.Col}
+	b, err := json.Marshal(tws)
 	if err != nil {
 		return nil, fmt.Errorf("json.Marshal error: %v", err)
 	}
