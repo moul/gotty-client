@@ -110,7 +110,7 @@ $ brew install https://raw.githubusercontent.com/moul/gotty-client/master/contri
 
 ### master (unreleased)
 
-* No entry
+* Fix TTY restoring by switching to [`github.com/moby/moby/pkg/term`](https://github.com/moby/moby/tree/master/pkg/term) ([#59](https://github.com/moul/gotty-client/pull/59) + ([#60](https://github.com/moul/gotty-client/pull/60) + ([#62](https://github.com/moul/gotty-client/pull/62) ([@Sh4d1](https://github.com/Sh4d1))
 
 [full commits list](https://github.com/moul/gotty-client/compare/v1.7.0...master)
 
