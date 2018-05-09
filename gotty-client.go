@@ -246,6 +246,9 @@ func (c *Client) Connect() error {
 		return err
 	}
 
+	// Initialize message types for gotty
+	c.initMessageType()
+
 	go c.pingLoop()
 
 	return nil
@@ -300,8 +303,6 @@ func (c *Client) ExitLoop() {
 
 // Loop will look indefinitely for new messages
 func (c *Client) Loop() error {
-	// Initialize message types for gotty
-	c.initMessageType()
 
 	if !c.Connected {
 		err := c.Connect()
