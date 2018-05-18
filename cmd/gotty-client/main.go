@@ -8,7 +8,6 @@ import (
 	"path"
 
 	"github.com/codegangsta/cli"
-	"github.com/moby/moby/pkg/term"
 	"github.com/moul/gotty-client"
 	"github.com/sirupsen/logrus"
 )
@@ -112,7 +111,7 @@ func action(c *cli.Context) error {
 	}
 
 	if detachKey := c.String("detach-keys"); detachKey != "" {
-		escapeKeys, err := term.ToBytes(detachKey)
+		escapeKeys, err := gottyclient.ToBytes(detachKey)
 		if err != nil {
 			logrus.Warnf("Invalid escape key: %v", err)
 		} else {

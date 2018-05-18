@@ -1,4 +1,4 @@
-package term // import "github.com/docker/docker/pkg/term"
+package gottyclient // from github.com/moby/moby/pkg/term
 
 import (
 	"fmt"
