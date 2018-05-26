@@ -21,6 +21,12 @@
 			"revisionTime": "2017-09-26T03:41:18Z"
 		},
 		{
+			"checksumSHA1": "eIXF+ekGGsJPB5m65qVp9bweXRQ=",
+			"path": "github.com/containerd/console",
+			"revision": "cb7008ab3d8359b78c5f464cb7cf160107ad5925",
+			"revisionTime": "2018-03-07T19:28:01Z"
+		},
+		{
 			"checksumSHA1": "bFj0ceSRvaFFCfmS4el1PjWhcgw=",
 			"path": "github.com/creack/goselect",
 			"revision": "1bd5ca702c6154bccc56ecd598932ee8b295cab2",
@@ -39,10 +45,10 @@
 			"revisionTime": "2017-03-19T17:27:27Z"
 		},
 		{
-			"checksumSHA1": "pjzyS3NpfF8mSTg1LLTQtnX9JC0=",
-			"path": "github.com/moby/moby/pkg/term",
-			"revision": "d4e48af48d1a2d7427ccd9f950cf6bc6ff5682b6",
-			"revisionTime": "2018-04-30T09:57:21Z"
+			"checksumSHA1": "ljd3FhYRJ91cLZz3wsH9BQQ2JbA=",
+			"path": "github.com/pkg/errors",
+			"revision": "816c9085562cd7ee03e7f8188a1cfd942858cded",
+			"revisionTime": "2018-03-11T21:45:15Z"
 		},
 		{
 			"checksumSHA1": "9jFFVttlMr6qQ7e+IrcT20XmFQY=",
