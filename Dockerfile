@@ -1,11 +1,13 @@
 # build
-FROM golang:1.12 as builder
-RUN             apt update && apt -y install jq
-COPY            . /go/src/github.com/moul/gotty-client
+FROM            golang:1.14-alpine as builder
+RUN             apk add --no-cache git gcc musl-dev make
 WORKDIR         /go/src/github.com/moul/gotty-client
+COPY            go.* ./
+RUN             go mod download
+COPY            . ./
 RUN             make install
 
 # minimal runtime
-FROM            scratch
-COPY            --from=builder /go/bin/gotty-client /bin/gotty-client
+FROM            alpine:3.11
+COPY            --from=builder /go/bin/gotty-client /bin/
 ENTRYPOINT      ["/bin/gotty-client"]

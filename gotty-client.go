@@ -157,6 +157,9 @@ func (c *Client) GetAuthToken() (string, error) {
 
 	logrus.Debugf("Fetching auth token auth-token: %q", target.String())
 	req, err := http.NewRequest("GET", target.String(), nil)
+	if err != nil {
+		return "", err
+	}
 	req.Header = *header
 	tr := &http.Transport{}
 	if c.SkipTLSVerify {
@@ -284,7 +287,10 @@ func (c *Client) initMessageType() {
 func (c *Client) pingLoop() {
 	for {
 		logrus.Debugf("Sending ping")
-		c.write([]byte{c.message.ping})
+		err := c.write([]byte{c.message.ping})
+		if err != nil {
+			logrus.Warnf("c.write: %v", err)
+		}
 		time.Sleep(30 * time.Second)
 	}
 }
@@ -318,7 +324,9 @@ func (c *Client) Loop() error {
 	if err != nil {
 		return fmt.Errorf("Error setting raw terminal: %v", err)
 	}
-	defer term.Reset()
+	defer func() {
+		_ = term.Reset()
+	}()
 
 	wg := &sync.WaitGroup{}
 
@@ -341,9 +349,6 @@ func (c *Client) Loop() error {
 type winsize struct {
 	Rows    uint16 `json:"rows"`
 	Columns uint16 `json:"columns"`
-	// unused
-	x uint16
-	y uint16
 }
 
 type posionReason int
@@ -511,7 +516,7 @@ func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
 					logrus.Warnf("Invalid base64 content: %q", msg.Data[1:])
 					break
 				}
-				c.Output.Write(buf)
+				_, _ = c.Output.Write(buf)
 			case c.message.pong: // pong
 			case c.message.setWindowTitle: // new title
 				newTitle := string(msg.Data[1:])
