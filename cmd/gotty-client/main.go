@@ -7,9 +7,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/codegangsta/cli"
-	"github.com/moul/gotty-client"
+	gottyclient "github.com/moul/gotty-client"
 	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 var VERSION string
@@ -71,7 +71,9 @@ func main() {
 
 	app.Action = action
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		logrus.Errorf("error: %v", err)
+	}
 }
 
 func action(c *cli.Context) error {
