@@ -12,5 +12,5 @@ require (
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/urfave/cli v1.22.4
-	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980
+	golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1
 )
