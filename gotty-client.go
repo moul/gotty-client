@@ -237,14 +237,14 @@ func (c *Client) Connect() error {
 		Arguments: "?" + query.Encode(),
 		AuthToken: authToken,
 	}
-	queryJson, err := json.Marshal(querySingle)
+	queryJSON, err := json.Marshal(querySingle)
 	if err != nil {
 		logrus.Errorf("Failed to parse init message %v", err)
 		return err
 	}
 	// Send Json
 	logrus.Debugf("Sending arguments and auth-token")
-	err = c.write(queryJson)
+	err = c.write(queryJSON)
 	if err != nil {
 		return err
 	}
