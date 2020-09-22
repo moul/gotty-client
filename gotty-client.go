@@ -89,8 +89,8 @@ func GetAuthTokenURL(httpURL string) (*url.URL, *http.Header, error) {
 }
 
 // GetURLQuery returns url.query
-func GetURLQuery(rawurl string) (url.Values, error) {
-	target, err := url.Parse(rawurl)
+func GetURLQuery(rawURL string) (url.Values, error) {
+	target, err := url.Parse(rawURL)
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +191,7 @@ func (c *Client) GetAuthToken() (string, error) {
 	re := regexp.MustCompile("var gotty_auth_token = '(.*)'")
 	output := re.FindStringSubmatch(string(body))
 	if len(output) == 0 {
-		return "", fmt.Errorf("Cannot fetch GoTTY auth-token, please upgrade your GoTTY server.")
+		return "", fmt.Errorf("cannot fetch GoTTY auth-token, please upgrade your GoTTY server")
 	}
 
 	return output[1], nil
@@ -237,14 +237,14 @@ func (c *Client) Connect() error {
 		Arguments: "?" + query.Encode(),
 		AuthToken: authToken,
 	}
-	json, err := json.Marshal(querySingle)
+	queryJson, err := json.Marshal(querySingle)
 	if err != nil {
 		logrus.Errorf("Failed to parse init message %v", err)
 		return err
 	}
 	// Send Json
 	logrus.Debugf("Sending arguments and auth-token")
-	err = c.write(json)
+	err = c.write(queryJson)
 	if err != nil {
 		return err
 	}
@@ -296,8 +296,8 @@ func (c *Client) pingLoop() {
 }
 
 // Close will nicely close the dialer
-func (c *Client) Close() {
-	c.Conn.Close()
+func (c *Client) Close() error {
+	return c.Conn.Close()
 }
 
 // ExitLoop will kill all goroutines launched by c.Loop()
@@ -322,7 +322,7 @@ func (c *Client) Loop() error {
 	}
 	err = term.SetRaw()
 	if err != nil {
-		return fmt.Errorf("Error setting raw terminal: %v", err)
+		return fmt.Errorf("error setting raw terminal: %v", err)
 	}
 	defer func() {
 		_ = term.Reset()
@@ -351,14 +351,14 @@ type winsize struct {
 	Columns uint16 `json:"columns"`
 }
 
-type posionReason int
+type poisonReason int
 
 const (
 	committedSuicide = iota
 	killed
 )
 
-func openPoison(fname string, poison chan bool) posionReason {
+func openPoison(fname string, poison chan bool) poisonReason {
 	logrus.Debug(fname + " suicide")
 
 	/*
@@ -376,18 +376,18 @@ func openPoison(fname string, poison chan bool) posionReason {
 	return committedSuicide
 }
 
-func die(fname string, poison chan bool) posionReason {
+func die(fname string, poison chan bool) poisonReason {
 	logrus.Debug(fname + " died")
 
 	wasOpen := <-poison
 	if wasOpen {
-		logrus.Error("ERROR: The channel was open when it wasn't suppoed to be")
+		logrus.Error("ERROR: The channel was open when it wasn't supposed to be")
 	}
 
 	return killed
 }
 
-func (c *Client) termsizeLoop(wg *sync.WaitGroup) posionReason {
+func (c *Client) termsizeLoop(wg *sync.WaitGroup) poisonReason {
 	defer wg.Done()
 	fname := "termsizeLoop"
 
@@ -416,7 +416,7 @@ type exposeFd interface {
 	Fd() uintptr
 }
 
-func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
+func (c *Client) writeLoop(wg *sync.WaitGroup) poisonReason {
 	defer wg.Done()
 	fname := "writeLoop"
 
@@ -476,7 +476,7 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) posionReason {
 
 }
 
-func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
+func (c *Client) readLoop(wg *sync.WaitGroup) poisonReason {
 	defer wg.Done()
 	fname := "readLoop"
 
@@ -506,7 +506,7 @@ func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
 			}
 			if len(msg.Data) == 0 {
 
-				logrus.Warnf("An error has occured")
+				logrus.Warnf("An error has occurred")
 				return openPoison(fname, c.poison)
 			}
 			switch msg.Data[0] {
@@ -520,7 +520,7 @@ func (c *Client) readLoop(wg *sync.WaitGroup) posionReason {
 			case c.message.pong: // pong
 			case c.message.setWindowTitle: // new title
 				newTitle := string(msg.Data[1:])
-				fmt.Fprintf(c.Output, "\033]0;%s\007", newTitle)
+				_, _ = fmt.Fprintf(c.Output, "\033]0;%s\007", newTitle)
 			case c.message.setPreferences: // json prefs
 				logrus.Debugf("Unhandled protocol message: json pref: %s", string(msg.Data[1:]))
 			case c.message.setReconnect: // autoreconnect
@@ -554,13 +554,13 @@ func ParseURL(input string) (string, error) {
 
 // NewClient returns a GoTTY client object
 func NewClient(inputURL string) (*Client, error) {
-	url, err := ParseURL(inputURL)
+	parsedURL, err := ParseURL(inputURL)
 	if err != nil {
 		return nil, err
 	}
 	return &Client{
 		Dialer:     &websocket.Dialer{},
-		URL:        url,
+		URL:        parsedURL,
 		WriteMutex: &sync.Mutex{},
 		Output:     os.Stdout,
 		poison:     make(chan bool),
