@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"regexp"
+	"syscall"
 	"strings"
 	"sync"
 	"time"
@@ -439,7 +440,8 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) poisonReason {
 		rdfs.Zero()
 		rdfs.Set(reader.(exposeFd).Fd())
 		err := goselect.Select(1, rdfs, nil, nil, 50*time.Millisecond)
-		if err != nil {
+		if err != nil && err != syscall.EINTR {
+			logrus.Debugf(err.Error())
 			return openPoison(fname, c.poison)
 		}
 		if rdfs.IsSet(reader.(exposeFd).Fd()) {
