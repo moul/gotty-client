@@ -439,7 +439,7 @@ func (c *Client) writeLoop(wg *sync.WaitGroup) poisonReason {
 
 		rdfs.Zero()
 		rdfs.Set(reader.(exposeFd).Fd())
-		err := goselect.Select(1, rdfs, nil, nil, 50*time.Millisecond)
+		err := goselect.RetrySelect(1, rdfs, nil, nil, 50*time.Millisecond, 3, 50*time.Millisecond)
 		if err != nil && err != syscall.EINTR {
 			logrus.Debugf(err.Error())
 			return openPoison(fname, c.poison)
