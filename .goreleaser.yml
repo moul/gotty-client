@@ -1,0 +1,74 @@
+env:
+  - GO111MODULE=on
+  - GOPROXY=https://proxy.golang.org
+before:
+  hooks:
+    - go mod download
+builds:
+  -
+    main: ./cmd/gotty-client
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      -
+        goos: darwin
+        goarch: 386
+    flags:
+      - "-a"
+    ldflags:
+      - '-extldflags "-static"'
+checksum:
+  name_template: '{{.ProjectName}}_checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - Merge pull request
+    - Merge branch
+archives:
+  -
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+    -
+      goos: windows
+      format: zip
+    wrap_in_directory: true
+brews:
+  -
+    name: gotty-client
+#    github:
+#      owner: moul
+#      name: homebrew-moul
+    commit_author:
+      name: moul-bot
+      email: "bot@moul.io"
+    homepage: https://github.com/moul/gotty-client
+    description: "gotty-client"
+nfpms:
+  -
+    file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage:  https://github.com/moul/gotty-client
+    description: "gotty-client"
+    maintainer: "Manfred Touron <https://manfred.life>"
+    license: "Apache-2.0 OR MIT"
+    vendor: moul
+    formats:
+      - deb
+      - rpm
