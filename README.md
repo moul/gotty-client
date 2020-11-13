@@ -12,13 +12,13 @@
                                                               +----------------+
                +--------------+                +---------+--->|   /bin/bash    |
                |              |                |         |    +----------------+
-           +-->|   Browser    |--+             |         |                      
-+-------+  |   |              |  |             |         |                      
+           +-->|   Browser    |--+             |         |
++-------+  |   |              |  |             |         |
 |       |  |   +--------------+  |             |         |    +----------------+
 |  Bob  |--+                     +-websocket-->|  Gotty  |--->| emacs /var/www |
 |       |  |    XXXXXXXXXXXXXX   |             |         |    +----------------+
-+-------+  |   X              X  |             |         |                      
-           +-->X gotty-client X--+             |         |                      
++-------+  |   X              X  |             |         |
+           +-->X gotty-client X--+             |         |
                X              X                |         |    +----------------+
                 XXXXXXXXXXXXXX                 +---------+--->|  tmux attach   |
                                                               +----------------+
@@ -83,11 +83,15 @@ GLOBAL OPTIONS:
 
 ## Install
 
-Install latest version using Golang (recommended)
+Install latest version using Golang (recommended):
 
-```console
-$ go get github.com/moul/gotty-client/cmd/gotty-client
+```bash
+git clone https://github.com/moul/gotty-client
+cd gotty-client
+make install # or `go install ./cmd/gotty-client`
 ```
+
+_PS: I don't know why, but `go get github.com/moul/gotty-client/cmd/gotty-client` is not stable everywhere_
 
 ---
 
