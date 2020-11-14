@@ -81,8 +81,12 @@ func GetAuthTokenURL(httpURL string) (*url.URL, *http.Header, error) {
 
 	target.Path = strings.TrimLeft(target.Path+"auth_token.js", "/")
 
+	user, err := url.PathUnescape(target.User.String())
+	if err != nil {
+		user = target.User.String()
+	}
 	if target.User != nil {
-		header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(target.User.String())))
+		header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(user)))
 		target.User = nil
 	}
 
