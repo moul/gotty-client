@@ -10,6 +10,7 @@ import (
 	gottyclient "github.com/moul/gotty-client"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var VERSION string
@@ -67,6 +68,11 @@ func main() {
 			Usage:  "WebSocket Origin URL",
 			EnvVar: "GOTTY_CLIENT_WS_ORIGIN",
 		},
+		cli.StringFlag{
+			Name:   "user, u",
+			Usage:  "User for Basic Authentication",
+			EnvVar: "GOTTY_CLIENT_USER",
+		},
 	}
 
 	app.Action = action
@@ -119,6 +125,17 @@ func action(c *cli.Context) error {
 		} else {
 			client.EscapeKeys = escapeKeys
 		}
+	}
+
+	if user := c.String("user"); user != "" {
+		client.User = user
+		fmt.Print("Password: ")
+		password, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+		fmt.Println()
+		if err != nil {
+			return cli.NewExitError("Failed to get password from stdin", 2)
+		}
+		client.Password = string(password)
 	}
 
 	// loop
