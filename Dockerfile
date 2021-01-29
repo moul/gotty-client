@@ -8,6 +8,6 @@ COPY            . ./
 RUN             make install
 
 # minimal runtime
-FROM            alpine:3.12
+FROM            alpine:3.13.1
 COPY            --from=builder /go/bin/gotty-client /bin/
 ENTRYPOINT      ["/bin/gotty-client"]
