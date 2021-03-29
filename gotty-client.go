@@ -11,9 +11,9 @@ import (
 	"net/url"
 	"os"
 	"regexp"
-	"syscall"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/containerd/console"
@@ -144,6 +144,8 @@ type Client struct {
 	V2              bool
 	message         *gottyMessageType
 	WSOrigin        string
+	User            string
+	Password        string
 }
 
 type querySingleType struct {
@@ -162,6 +164,10 @@ func (c *Client) GetAuthToken() (string, error) {
 	target, header, err := GetAuthTokenURL(c.URL)
 	if err != nil {
 		return "", err
+	}
+	if c.User != "" {
+		basicAuth := c.User + ":" + c.Password
+		header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(basicAuth)))
 	}
 
 	logrus.Debugf("Fetching auth token auth-token: %q", target.String())
@@ -219,6 +225,10 @@ func (c *Client) Connect() error {
 	target, header, err := GetWebsocketURL(c.URL)
 	if err != nil {
 		return err
+	}
+	if c.User != "" {
+		basicAuth := c.User + ":" + c.Password
+		header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(basicAuth)))
 	}
 	if c.WSOrigin != "" {
 		header.Add("Origin", c.WSOrigin)
