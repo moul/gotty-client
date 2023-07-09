@@ -11,6 +11,6 @@ require (
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/urfave/cli v1.22.8
-	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181
+	golang.org/x/crypto v0.11.1-0.20230705203307-23b1b90df264
+	golang.org/x/sys v0.10.0
 )
